@@ -1,0 +1,32 @@
+name: Build and Commit Dictionary
+
+on:
+  push:
+    paths:
+      - "dict/public/**"
+      - "convert.py"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: :contentReference[oaicite:3]{index=3}@v4
+
+      - uses: :contentReference[oaicite:4]{index=4}@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build
+        run: python convert.py
+
+      - name: Commit & Push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add dict/build/gboard_public.txt
+          git commit -m "auto build dictionary" || echo "no changes"
+          git push

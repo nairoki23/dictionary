@@ -1,15 +1,15 @@
 import csv
 from pathlib import Path
 
-BASE_DIR = Path("dict")
-OUTPUT_DIR = BASE_DIR / "build"
+BASE_DIR = Path("./")
+OUTPUT_DIR = Path("build")
 LANG = "ja-JP"
 
-def load_tsv_files(directory: Path):
+def load_csv_files(directory: Path):
     entries = []
-    for file in directory.glob("*.tsv"):
+    for file in directory.glob("*.csv"):
         with open(file, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f, delimiter="\t")
+            reader = csv.DictReader(f)
             for row in reader:
                 reading = row.get("reading", "").strip()
                 word = row.get("word", "").strip()
@@ -37,14 +37,14 @@ def deduplicate(entries):
     return result
 
 def main():
-    public_entries = load_tsv_files(BASE_DIR / "public")
-    private_entries = load_tsv_files(BASE_DIR / "private")
+    public_entries = load_csv_files(BASE_DIR / "public")
+    private_entries = load_csv_files(BASE_DIR / "private")
 
     public_entries = deduplicate(public_entries)
     private_entries = deduplicate(private_entries)
     all_entries = deduplicate(public_entries + private_entries)
 
-    OUTPUT_DIR.mkdir(exist_ok=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     write_gboard(public_entries, OUTPUT_DIR / "gboard_public.txt")
     write_gboard(private_entries, OUTPUT_DIR / "gboard_private.txt")

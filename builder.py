@@ -1,6 +1,6 @@
 import csv
 from pathlib import Path
-
+import argparse
 BASE_DIR = Path("./")
 OUTPUT_DIR = Path("build")
 LANG = "ja-JP"
@@ -37,8 +37,16 @@ def deduplicate(entries):
     return result
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--no-private", action="store_true")
+    args = parser.parse_args()
+
     public_entries = load_csv_files(BASE_DIR / "public")
-    private_entries = load_csv_files(BASE_DIR / "private")
+
+    if args.no_private:
+        private_entries = []
+    else:
+        private_entries = load_csv_files(BASE_DIR / "private")
 
     public_entries = deduplicate(public_entries)
     private_entries = deduplicate(private_entries)
@@ -47,8 +55,10 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     write_gboard(public_entries, OUTPUT_DIR / "gboard_public.txt")
-    write_gboard(private_entries, OUTPUT_DIR / "gboard_private.txt")
-    write_gboard(all_entries, OUTPUT_DIR / "gboard_all.txt")
 
+    if not args.no_private:
+        write_gboard(private_entries, OUTPUT_DIR / "gboard_private.txt")
+
+    write_gboard(all_entries, OUTPUT_DIR / "gboard_all.txt")
 if __name__ == "__main__":
     main()

@@ -1,4 +1,4 @@
-name: Build and Commit Dictionary
+name: Build Dictionary
 
 on:
   push:
@@ -14,19 +14,18 @@ jobs:
       contents: write
 
     steps:
-      - uses: :contentReference[oaicite:3]{index=3}@v4
+      - uses: :contentReference[oaicite:0]{index=0}@v4
 
-      - uses: :contentReference[oaicite:4]{index=4}@v5
+      - uses: :contentReference[oaicite:1]{index=1}@v5
         with:
           python-version: "3.11"
 
-      - name: Build
-        run: python convert.py
+      - run: python convert.py --no-private
 
-      - name: Commit & Push
+      - name: Commit build
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add dict/build/gboard_public.txt
-          git commit -m "auto build dictionary" || echo "no changes"
+          git add -f dict/build/
+          git commit -m "auto build" || echo "no changes"
           git push

@@ -3,7 +3,7 @@ name: Build Dictionary
 on:
   push:
     paths:
-      - "dict/public/**"
+      - "public/**"
       - "builder.py"
 
 jobs:

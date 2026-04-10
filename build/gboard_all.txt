@@ -1,2 +1,6 @@
 # Gboard Dictionary version:2
 # Gboard Dictionary format:shortcut	word	language_tag	pos_tag
+あす	明透	ja-JP	人名
+ある	存流	ja-JP	人名
+あるべます	Albemuth	ja-JP	名詞
+いせかいのほうせきたん	ヰ世界の宝石譚	ja-JP	名詞

@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "dict/public/**"
-      - "convert.py"
+      - "builder.py"
 
 jobs:
   build:
@@ -14,13 +14,13 @@ jobs:
       contents: write
 
     steps:
-      - uses: :contentReference[oaicite:0]{index=0}@v4
+      - uses: actions/checkout@v4
 
-      - uses: :contentReference[oaicite:1]{index=1}@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - run: python convert.py --no-private
+      - run: python builder.py --no-private
 
       - name: Commit build
         run: |

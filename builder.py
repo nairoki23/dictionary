@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 import argparse
-BASE_DIR = Path("./")
+BASE_DIR = Path()
 OUTPUT_DIR = Path("build")
 LANG = "ja-JP"
 
@@ -9,12 +9,11 @@ def load_csv_files(directory: Path):
     entries = []
     for file in directory.glob("*.csv"):
         with open(file, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
+            reader = csv.DictReader(f, delimiter="\t")
             for row in reader:
                 reading = row.get("reading", "").strip()
                 word = row.get("word", "").strip()
                 pos = row.get("pos", "").strip()
-
                 if reading and word:
                     entries.append((reading, word, pos))
     return entries
@@ -51,6 +50,7 @@ def main():
     public_entries = deduplicate(public_entries)
     private_entries = deduplicate(private_entries)
     all_entries = deduplicate(public_entries + private_entries)
+
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
